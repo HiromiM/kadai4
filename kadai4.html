@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <title>chatkadai6</title>
+    <title>chatkadai4</title>
 
     <style>
         #output {
@@ -51,7 +51,7 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
-        import { getDatabase, ref, push, set, onChildAdded, remove,onChildRemoved }
+        import { getDatabase, ref, push, set, onChildAdded, remove,onChildRemoved,serverTimestamp}
 from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
         // TODO: Add SDKs for Firebase products that you want to use
         // https://firebase.google.com/docs/web/setup#available-libraries
@@ -60,19 +60,14 @@ from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
         var firebaseConfig = {
-          apiKey: "AIzaSyCveCMuq67a_wfKM2El36IfgH75Bgc5WGM",
-          authDomain: "chatkadai6.firebaseapp.com",
-          projectId: "chatkadai6",
-          storageBucket: "chatkadai6.appspot.com",
-          messagingSenderId: "701721578313",
-          appId: "1:701721578313:web:b56f63a5b25ab97099a898",
-          measurementId: "G-7P30DGN6LB"
+          
         };
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         // この辺りに書いていきます
         const db = getDatabase(app);
         const dbRef = ref(db, "kadai4");
+        const myTimestamp = serverTimestamp();
 
         // 送信処理を記述
         $('#send').on('click', function () {
@@ -98,6 +93,7 @@ from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
             const msg = {
                 uname: uname,
                 text: text,
+                time: myTimestamp,
             }
 
             // firebaseに送る準備をしていることになります🤗
@@ -125,9 +121,16 @@ from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
             const key = data.key;
             console.log(key, 'データの塊にアクセス')
 
+            let dateTime = new Date(msg.time);
+console.log(dateTime);
+let date = dateTime.toLocaleDateString('ja-JP').slice(5)
+console.log(date);
+console.log(dateTime.toLocaleTimeString('ja-JP'));
+
             // es6のテンプレートリテラル
             let h = `
                 <div class="msg">
+                    <p class="date">${Date(msg.time).slice(4, 25)}</p>
                     <p>${msg.uname}</p>
                     <p>${msg.text}</p>
                 </div>    
